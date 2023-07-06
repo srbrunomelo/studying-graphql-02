@@ -1,0 +1,23 @@
+type Link {
+  id: Int
+  label: String
+  url: String
+  active: Boolean
+}
+
+input LinkInput {
+  label: String
+  url: String
+  active: Boolean
+}
+
+type Query {
+  links: [Link]
+  link: Link
+}
+
+type Mutation {
+  create(data: LinkInput): Link
+  update(id: Int, data: LinkInput): Link
+  delete(id: Int): Boolean
+}
