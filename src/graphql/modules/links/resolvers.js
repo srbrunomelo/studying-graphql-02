@@ -1,48 +1,25 @@
-const database = require("../../../database");
+const LinkService = require("../../../services/LinkService");
 
 module.exports = {
   Query: {
-    link: async (_, { id }) => {
-      const response = await database("links").where({ id }).first();
+    link: async (obj, { id }, context, info) =>
+      await context.linkService.getById(id),
 
-      return response;
-    },
-    links: async () => await database("links"),
+    links: async (obj, args, context, info) =>
+      await context.linkService.getAll(),
 
-    search: async (_, { data }) => {
-      const response = await database("links").where({
-        ...(data.label ? { label: data.label } : {}),
-        ...(data.url ? { url: data.url } : {}),
-        ...(typeof data.active === "boolean" ? { active: data.active } : {}),
-      });
-
-      return response;
-    },
+    search: async (obj, { data }, context, info) =>
+      await context.linkService.search(data),
   },
 
   Mutation: {
-    create: async (_, { data }) =>
-      await (
-        await database("links")
-          .insert({ ...data, active: 1 })
-          .returning("*")
-      )[0],
+    create: async (obj, { data }, context, info) =>
+      await context.linkService.create(data),
 
-    update: async (_, { id, data }) => {
-      const response = await database("links")
-        .where({ id })
-        .update({ ...data })
-        .returning("*");
+    update: async (obj, { id, data }, context, info) =>
+      await context.linkService.update(id, data),
 
-      return response[0];
-    },
-
-    delete: async (_, { id }) => {
-      const response = await database("links").where({ id }).del();
-
-      if (response === 0) throw new Error("Registro inexistente");
-
-      return true;
-    },
+    delete: async (obj, { id }, context, info) =>
+      await context.linkService.delete(id),
   },
 };
