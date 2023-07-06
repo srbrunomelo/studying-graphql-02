@@ -10,7 +10,10 @@ const schema = makeExecutableSchema({
 const server = new ApolloServer({
   schema,
   formatError: (err) => {
-    // custom erros
+    if (err.message.startsWith("Registro inexistente")) {
+      return new Error(err.message);
+    }
+
     return err;
   },
 });

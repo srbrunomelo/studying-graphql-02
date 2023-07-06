@@ -11,9 +11,16 @@ input LinkInput {
   active: Boolean
 }
 
+input SearchLinkInput {
+  label: String
+  url: String
+  active: Boolean
+}
+
 type Query {
   links: [Link]
-  link: Link
+  link(id: Int!): Link
+  search(data: SearchLinkInput): [Link]
 }
 
 type Mutation {
